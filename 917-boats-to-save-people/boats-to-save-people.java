@@ -1,16 +1,24 @@
 class Solution {
     public int numRescueBoats(int[] people, int limit) {
-        Arrays.sort(people);
-        int i = 0, j = people.length - 1;
-        int boats = 0;
+        int count=0;
+        int n=people.length,i=0,j=n-1;
 
-        while (i <= j) {
-            if (people[i] + people[j] <= limit) {
-                i++;  // pair lightest with heaviest
+        Arrays.sort(people);
+
+        while(i<=j){
+            if(people[i]+people[j]<=limit){
+                count++;
+                i++;j--;
             }
-            j--;      // heaviest always boards
-            boats++;
+            else if(people[j]<=limit){
+                count++;
+                j--;
+            }
+            else if(people[i]<=limit){
+                count++;
+                i++;
+            }
         }
-        return boats;
+        return count;
     }
 }
