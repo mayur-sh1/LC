@@ -1,53 +1,49 @@
 class Solution {
     public int mostBooked(int n, int[][] meetings) {
+        // sort by start time
+        Arrays.sort(meetings,(a,b)->a[0]-b[0]);
 
-        Arrays.sort(meetings, (a, b) -> a[0] - b[0]);
+        int roomCount[]=new int[n];
 
-        long[] endTimes = new long[n];   // use long to avoid overflow
-        int[] roomCount = new int[n];
+        PriorityQueue<Integer> availableRooms=new PriorityQueue<>();
+        // initially all rooms are available
+        for(int i=0;i<n;i++) availableRooms.add(i);
 
-        for (int i = 0; i < meetings.length; i++) {
-            int start = meetings[i][0];
-            int end = meetings[i][1];
+        //[endTime,index]
+        PriorityQueue<long[]> occupiedRooms =new PriorityQueue<>((a, b) -> a[0] == b[0]
+                                                                            ? Long.compare(a[1], b[1])
+                                                                            : Long.compare(a[0], b[0]));
 
-            boolean roomFound = false;
 
-            // try to find free room
-            for (int j = 0; j < n; j++) {
-                if (start >= endTimes[j]) {
-                    endTimes[j] = end;
-                    roomCount[j]++;
-                    roomFound = true;
-                    break;
-                }
+        for(int i=0;i<meetings.length;i++){
+            int start=meetings[i][0];
+            int end=meetings[i][1];
+            long duration=end-start;
+
+            while(!occupiedRooms.isEmpty() && occupiedRooms.peek()[0]<=start){
+                long expired[]=occupiedRooms.poll();
+                availableRooms.add((int)expired[1]);
             }
 
-            // delay meeting
-            if (!roomFound) {
-                long minEnd = Long.MAX_VALUE;
-                int room = -1;
-
-                for (int k = 0; k < n; k++) {
-                    if (endTimes[k] < minEnd) {
-                        minEnd = endTimes[k];
-                        room = k;
-                    }
-                }
-
-                long duration = end - start;
-                endTimes[room] = minEnd + duration;
+            if(!availableRooms.isEmpty()){
+                int room=availableRooms.poll();
                 roomCount[room]++;
+                occupiedRooms.add(new long[]{end,room});
+            }
+            else{
+                //meeting is delayed
+                long[] minEnd=occupiedRooms.poll();
+                minEnd[0]+=duration;
+                roomCount[(int)minEnd[1]]++;
+                occupiedRooms.add(new long[]{minEnd[0],minEnd[1]});
             }
         }
 
-        // find room with max meetings
-        int ans = 0;
-        for (int i = 1; i < n; i++) {
-            if (roomCount[i] > roomCount[ans]) {
-                ans = i;
-            }
+        int ans=0;
+        for(int i=1;i<n;i++){
+            if(roomCount[i]>roomCount[ans]) ans=i;
         }
-
         return ans;
+
     }
 }
