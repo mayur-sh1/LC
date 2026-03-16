@@ -1,7 +1,7 @@
 class Solution {
     public int minimumRounds(int[] tasks) {
         // bcz i need ascending order of keys
-        TreeMap<Integer,Integer> map=new TreeMap<>();
+        HashMap<Integer,Integer> map=new HashMap<>();
         for(int t:tasks) map.put(t,map.getOrDefault(t,0)+1);
 
         int rounds=0;
