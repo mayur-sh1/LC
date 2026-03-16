@@ -20,6 +20,7 @@ class Solution {
                 additionalRocks-=req;
                 max++;
             }
+            else break;
         }
         return max;
     }
