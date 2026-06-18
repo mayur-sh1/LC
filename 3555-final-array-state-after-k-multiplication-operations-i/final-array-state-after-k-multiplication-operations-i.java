@@ -17,15 +17,10 @@ class Solution {
             int val=arr[0],idx=arr[1];
 
             int newValue=val*multiplier;
+            nums[idx]=newValue;
 
             pq.add(new int[]{newValue,idx});
         }
-
-        int res[]=new int[n];
-        while(!pq.isEmpty()){
-            int[] ele=pq.poll();
-            res[ele[1]]=ele[0];
-        }
-        return res;
+        return nums;
     }
 }
