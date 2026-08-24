@@ -1,6 +1,6 @@
 class Solution {
     int[][] players;
-    int[][] dp;
+    Integer[][] dp;
     public int bestTeamScore(int[] scores, int[] ages) {
         int n=scores.length;
         
@@ -16,10 +16,7 @@ class Solution {
             return a[0]-b[0];
         });
 
-        dp=new int[n][n+1];
-        for(int[] row:dp){
-            Arrays.fill(row,-1);
-        }
+        dp=new Integer[n][n+1];
 
         // indexOfCurrentPlayer , index of pre selected player
         return solve(0,-1);
@@ -27,7 +24,7 @@ class Solution {
     int solve(int index,int prev){
         if(index==players.length) return 0;
 
-        if(dp[index][prev+1]!=-1) return dp[index][prev+1]; 
+        if(dp[index][prev+1]!=null) return dp[index][prev+1];  // prev+1 bcz prev can be -1
 
         int skip=solve(index+1,prev);
         
